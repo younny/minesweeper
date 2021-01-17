@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:minesweeper/bloc/enum.dart';
 import 'package:minesweeper/widget/setting_bar.dart';
@@ -36,9 +38,7 @@ class _GameBoardState extends State<GameBoard> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        SettingBar(
-            totalMines: totalMines
-        ),
+        SettingBar(totalMines: totalMines),
         Expanded(
           child: GridView.builder(
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
@@ -51,7 +51,7 @@ class _GameBoardState extends State<GameBoard> {
                 onTap: () => _onTap(x, y),
                 onLongPress: () => _onLongTap(x, y),
                 child: Slot(
-                  item: '${widget.board[x][y]}',
+                  item: (widget.board[x][y] ?? 0).toString(),
                   slotState: slotState[x][y],
                 ),
               );
@@ -70,6 +70,7 @@ class _GameBoardState extends State<GameBoard> {
         print("Bombed!!!!!!");
       } else {
         slotState[row][col] = SlotState.FLIPPED;
+        _flipNearby(row, col);
       }
     });
   }
@@ -84,5 +85,55 @@ class _GameBoardState extends State<GameBoard> {
         totalMines--;
       }
     });
+  }
+
+  _flipNearby(int row, int col) {
+    int randomTop = row == 0 ? 0 : Random().nextInt(row);
+    int randomBottom = Random().nextInt(widget.row);
+    int randomLeft = col == 0 ? 0 : Random().nextInt(col);
+    int randomRight = Random().nextInt(widget.row);
+
+    for (int i = row; i >= randomTop && i > 0; i--) {
+      if (_isBomb(i, col)) return;
+      if (col > 0) _flipColumnRandomly(i, col);
+      _flip(i, col);
+    }
+
+    for (int i = row + 1; i <= randomBottom; i++) {
+      if (_isBomb(i, col)) break;
+      if (col > 0) _flipColumnRandomly(i, col);
+      _flip(i, col);
+    }
+
+    for (int i = col; i >= randomLeft && i > 0; i--) {
+      if (_isBomb(row, i)) break;
+      if (col > 0) _flipColumnRandomly(i, col);
+      _flip(row, i);
+    }
+
+    for (int i = col + 1; i <= randomRight; i++) {
+      if (_isBomb(row, i)) break;
+      if (col > 0) _flipColumnRandomly(i, col);
+      _flip(row, i);
+    }
+  }
+
+  _isBomb(int row, int col) => widget.board[row][col] == '*';
+
+  _flip(int row, int col) {
+    setState(() {
+      slotState[row][col] = SlotState.FLIPPED;
+    });
+  }
+
+  _flipColumnRandomly(int row, int col) {
+    for (int j = col; j >= Random().nextInt(col); j--) {
+      if (_isBomb(row, j)) break;
+      _flip(row, j);
+    }
+    for (int j = col; j <= Random().nextInt(widget.row); j++) {
+      if (_isBomb(row, j)) break;
+      _flip(row, j);
+    }
   }
 }

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:minesweeper/bloc/game/game_bloc.dart';
 import 'package:minesweeper/widget/game_board.dart';
-import 'package:minesweeper/widget/setting_bar.dart';
 
 class GamePage extends StatefulWidget {
   GamePage({Key key}) : super(key: key);
@@ -33,8 +32,8 @@ class _GamePageState extends State<GamePage> {
               case GameLoadingSuccess:
                 final board = (state as GameLoadingSuccess).board;
                 return GameBoard(
-                  row: 10,
-                  totalMines: 10,
+                  row: _gameBloc.gameClient.row,
+                  totalMines: _gameBloc.gameClient.totalMines,
                   board: board,
                 );
               default:

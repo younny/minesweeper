@@ -1,65 +1,67 @@
 import 'dart:math';
 
+import 'package:flutter/cupertino.dart';
+
 class GameClient {
-  final flags = ['*', 0, 0, 0, 0, 0, 0, 0, 0, 0];
 
-  int row = 10;
-  int col = 10;
-  int totalMines = 10;
+  GameClient(
+      {@required this.totalMines, @required this.row, @required this.col}) {
+    board = setBoard();
+  }
 
-  GameClient();
+  final int totalMines;
+  final int row;
+  final int col;
+
+  List board;
 
   List setBoard() {
     return List.generate(row, (_) => List(col));
   }
 
   Future<List> initGame() async {
-    final board = await setMines();
+    await setBombs();
 
-    return await setCount(board);
+    await setCount();
+
+    return board;
   }
 
-  Future<List> setMines() async {
-    final board = setBoard();
-
+  Future<List> setBombs() async {
     var count = 0;
-    for (int r = 0; r < row; r++) {
-      for (int c = 0; c < col; c++) {
-        final picked = flags[Random().nextInt(flags.length)];
-        if (picked == '*') {
-          count++;
-        }
-        if (count > 10) {
-          board[r][c] = 0;
-        } else {
-          board[r][c] = picked;
-        }
-      }
+    while (count < totalMines) {
+      int i = Random().nextInt(row);
+      int j = Random().nextInt(row);
+      board[i][j] = '*';
+      count++;
     }
     return board;
   }
 
-  Future<List> setCount(List board) async {
+  setCount() async {
     for (int r = 0; r < row; r++) {
       for (int c = 0; c < col; c++) {
         if (board[r][c] == '*') {
-          addCountAdjacent(board, r, c);
+          addCountAdjacent(r, c);
         }
       }
     }
-
-    return board;
   }
 
-  addCountAdjacent(List board, int r, int c) {
-    for (int i = r - 1; i <= r + 1; i++) {
-      for (int j = c - 1; j <= c + 1; j++) {
-        if (i < 0 || i >= row) break;
-        if (j < 0 || j >= col) break;
-        if (board[i][j] == '*') break;
-
-        board[i][j]++;
+  addCountAdjacent(int r, int c) {
+    for (int i = max(0, r - 1); i <= min(row - 1, r + 1); i++) {
+      for (int j = max(0, c - 1); j <= min(col - 1, c + 1); j++) {
+        if (board[i][j] != '*') {
+          addCount(i, j);
+        }
       }
     }
+  }
+
+  addCount(int r, int c) {
+    if (board[r][c] == null)
+      board[r][c] = 1;
+    else
+      board[r][c]++;
   }
 }

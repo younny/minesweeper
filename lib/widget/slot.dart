@@ -34,14 +34,12 @@ class Slot extends StatelessWidget {
     );
   }
 
-  bool _isFlagged() => slotState == SlotState.FLAGGED;
-
   bool _isFlipped() => slotState == SlotState.FLIPPED;
 
   Widget _renderSlotContent() {
     switch (slotState) {
       case SlotState.FLIPPED:
-        return Text(item,
+        return Text(item ?? '',
             style: TextStyle(
               color: _pickItemColor(),
               fontSize: 24,
@@ -71,5 +69,5 @@ class Slot extends StatelessWidget {
       return Color(0xff97bd73);
   }
 
-  Color _pickItemColor() => colors[int.parse(this.item)];
+  Color _pickItemColor() => colors[int.parse(item ?? 0)];
 }

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:minesweeper/bloc/game/game_bloc.dart';
 import 'package:minesweeper/bloc/game/game_bloc_observer.dart';
-import 'package:minesweeper/screen/start_page.dart';
+import 'package:minesweeper/screen/game_page.dart';
 import 'package:provider/provider.dart';
 
 import 'bloc/game_client.dart';
@@ -22,7 +22,11 @@ class MinesweeperApp extends StatelessWidget {
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
       home: Provider(
-        create: (context) => GameClient(),
+        create: (context) => GameClient(
+          totalMines: 10,
+          row: 10,
+          col: 10
+        ),
         child: BlocProvider<GameBloc>(
           create: (context) => GameBloc(
             gameClient: context.read<GameClient>()
