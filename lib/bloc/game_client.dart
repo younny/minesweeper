@@ -1,17 +1,26 @@
 import 'dart:math';
 
 class GameClient {
-  GameClient();
-
   final flags = ['*', 0, 0, 0, 0, 0, 0, 0, 0, 0];
 
-  List board;
   int row = 10;
   int col = 10;
   int totalMines = 10;
 
+  GameClient();
+
+  List setBoard() {
+    return List.generate(row, (_) => List(col));
+  }
+
   Future<List> initGame() async {
-    board = setBoard();
+    final board = await setMines();
+
+    return await setCount(board);
+  }
+
+  Future<List> setMines() async {
+    final board = setBoard();
 
     var count = 0;
     for (int r = 0; r < row; r++) {
@@ -30,15 +39,11 @@ class GameClient {
     return board;
   }
 
-  List setBoard() {
-    return List.generate(row, (_) => List(col));
-  }
-
-  Future<List> setCount() async {
+  Future<List> setCount(List board) async {
     for (int r = 0; r < row; r++) {
       for (int c = 0; c < col; c++) {
         if (board[r][c] == '*') {
-          addCountAdjacent(r, c);
+          addCountAdjacent(board, r, c);
         }
       }
     }
@@ -46,7 +51,7 @@ class GameClient {
     return board;
   }
 
-  addCountAdjacent(int r, int c) {
+  addCountAdjacent(List board, int r, int c) {
     for (int i = r - 1; i <= r + 1; i++) {
       for (int j = c - 1; j <= c + 1; j++) {
         if (i < 0 || i >= row) break;
