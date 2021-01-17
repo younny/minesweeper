@@ -11,7 +11,7 @@ class Slot extends StatelessWidget {
   static const colors = [
     Colors.transparent,
     Colors.blue,
-    Colors.amber,
+    Colors.orange,
     Colors.red,
     Colors.purple
   ];
