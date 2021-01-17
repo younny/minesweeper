@@ -15,7 +15,7 @@ class GameBloc extends Bloc<GameEvent, GameState> {
   @override
   Stream<GameState> mapEventToState(GameEvent event) async* {
     if (event is GameStarted) {
-      await gameClient.initGame(row: 10, col: 10);
+      await gameClient.initGame();
       final finalBoard = await gameClient.setCount();
 
       yield GameLoadingSuccess(board: finalBoard);

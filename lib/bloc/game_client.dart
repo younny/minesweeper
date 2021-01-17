@@ -1,30 +1,22 @@
 import 'dart:math';
 
-import 'package:flutter/material.dart';
-
 class GameClient {
   GameClient();
 
-  final flag = ['*', 0, 0, 0, 0, 0, 0, 0, 0, 0];
-  final totalMines = 10;
+  final flags = ['*', 0, 0, 0, 0, 0, 0, 0, 0, 0];
 
   List board;
   int row = 10;
   int col = 10;
+  int totalMines = 10;
 
-  List setBoard(int row, int col) {
-    this.row = row;
-    this.col = col;
-    return List.generate(row, (_) => List(col));
-  }
-
-  Future<List> initGame({@required int row, @required int col}) async {
-    board = setBoard(row, col);
+  Future<List> initGame() async {
+    board = setBoard();
 
     var count = 0;
     for (int r = 0; r < row; r++) {
       for (int c = 0; c < col; c++) {
-        final picked = flag[Random().nextInt(flag.length)];
+        final picked = flags[Random().nextInt(flags.length)];
         if (picked == '*') {
           count++;
         }
@@ -36,6 +28,10 @@ class GameClient {
       }
     }
     return board;
+  }
+
+  List setBoard() {
+    return List.generate(row, (_) => List(col));
   }
 
   Future<List> setCount() async {

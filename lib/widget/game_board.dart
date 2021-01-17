@@ -67,7 +67,6 @@ class _GameBoardState extends State<GameBoard> {
     setState(() {
       if (widget.board[row][col] == '*') {
         slotState[row][col] = SlotState.BOMBED;
-        //todo show dialog.
         print("Bombed!!!!!!");
       } else {
         slotState[row][col] = SlotState.FLIPPED;
