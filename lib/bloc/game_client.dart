@@ -4,8 +4,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:minesweeper/model/board.dart';
 
 class GameClient {
-
-  GameClient({@required this.totalMines, @required this.row, @required this.col});
+  GameClient(
+      {@required this.totalMines, @required this.row, @required this.col});
 
   final int totalMines;
   final int row;
@@ -28,12 +28,14 @@ class GameClient {
   }
 
   Future<Board> setBombs() async {
-    var count = 0;
+    int count = 0;
     while (count < totalMines) {
       int i = Random().nextInt(row);
       int j = Random().nextInt(row);
-      board.grid[i][j] = '*';
-      count++;
+      if (board.grid[i][j] == null) {
+        board.grid[i][j] = '*';
+        count++;
+      }
     }
     return board;
   }

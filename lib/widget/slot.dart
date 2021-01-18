@@ -39,6 +39,13 @@ class Slot extends StatelessWidget {
   Widget _renderSlotContent() {
     switch (slotState) {
       case SlotState.FLIPPED:
+        if (item == '*') {
+          return Icon(
+            Icons.bug_report,
+            color: Colors.black,
+            size: 24,
+          );
+        }
         return Text(item ?? '',
             style: TextStyle(
               color: _pickItemColor(),
