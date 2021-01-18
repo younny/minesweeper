@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:minesweeper/bloc/enum.dart';
+import 'package:minesweeper/model/board.dart';
 import 'package:minesweeper/widget/setting_bar.dart';
 import 'package:minesweeper/widget/slot.dart';
 
@@ -11,11 +12,13 @@ class GameBoard extends StatefulWidget {
     @required this.row,
     @required this.totalMines,
     @required this.board,
+    @required this.restart
   }) : super(key: key);
 
   final int row;
   final int totalMines;
-  final List board;
+  final Board board;
+  final Function restart;
 
   @override
   _GameBoardState createState() => _GameBoardState();
@@ -25,20 +28,36 @@ class _GameBoardState extends State<GameBoard> {
   int row;
   List slotState;
   int totalMines;
+  Board board;
 
   @override
   void initState() {
     super.initState();
     row = widget.row;
     totalMines = widget.totalMines;
+    board = widget.board;
     slotState = List.generate(row, (index) => List(row));
+  }
+
+  @override
+  void didUpdateWidget(covariant GameBoard oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.board != widget.board) {
+      setState(() {
+        board = widget.board;
+        slotState = List.generate(row, (index) => List(row));
+      });
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
-        SettingBar(totalMines: totalMines),
+        SettingBar(
+          totalMines: totalMines,
+          onRefresh: _onRefresh,
+        ),
         Expanded(
           child: GridView.builder(
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
@@ -51,7 +70,7 @@ class _GameBoardState extends State<GameBoard> {
                 onTap: () => _onTap(x, y),
                 onLongPress: () => _onLongTap(x, y),
                 child: Slot(
-                  item: (widget.board[x][y] ?? 0).toString(),
+                  item: (widget.board.grid[x][y] ?? 0).toString(),
                   slotState: slotState[x][y],
                 ),
               );
@@ -63,9 +82,13 @@ class _GameBoardState extends State<GameBoard> {
     );
   }
 
+  _onRefresh() {
+    widget.restart();
+  }
+
   _onTap(int row, int col) {
     setState(() {
-      if (widget.board[row][col] == '*') {
+      if (widget.board.grid[row][col] == '*') {
         slotState[row][col] = SlotState.BOMBED;
         print("Bombed!!!!!!");
       } else {
@@ -118,7 +141,7 @@ class _GameBoardState extends State<GameBoard> {
     }
   }
 
-  _isBomb(int row, int col) => widget.board[row][col] == '*';
+  _isBomb(int row, int col) => widget.board.grid[row][col] == '*';
 
   _flip(int row, int col) {
     setState(() {

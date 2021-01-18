@@ -24,9 +24,8 @@ class _GamePageState extends State<GamePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text("Minesweeper")),
-      body: BlocConsumer<GameBloc, GameState>(
-          listener: (context, state) {},
-          buildWhen: (previous, context) => previous is GameInitial,
+      body: BlocBuilder<GameBloc, GameState>(
+          buildWhen: (previous, state) => previous.runtimeType == GameInitial,
           builder: (context, state) {
             switch (state.runtimeType) {
               case GameLoadingSuccess:
@@ -35,11 +34,18 @@ class _GamePageState extends State<GamePage> {
                   row: _gameBloc.gameClient.row,
                   totalMines: _gameBloc.gameClient.totalMines,
                   board: board,
+                  restart: _onRestart,
                 );
               default:
                 return Container();
             }
           }),
     );
+  }
+
+  _onRestart() {
+    _gameBloc.add(GameFinished());
+
+    _gameBloc.add(GameStarted());
   }
 }

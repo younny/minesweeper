@@ -1,25 +1,25 @@
 import 'dart:math';
 
 import 'package:flutter/cupertino.dart';
+import 'package:minesweeper/model/board.dart';
 
 class GameClient {
 
-  GameClient(
-      {@required this.totalMines, @required this.row, @required this.col}) {
-    board = setBoard();
-  }
+  GameClient({@required this.totalMines, @required this.row, @required this.col});
 
   final int totalMines;
   final int row;
   final int col;
 
-  List board;
+  Board board;
 
-  List setBoard() {
-    return List.generate(row, (_) => List(col));
+  Board setBoard() {
+    return Board(grid: List.generate(row, (_) => List(col)));
   }
 
-  Future<List> initGame() async {
+  Future<Board> initGame() async {
+    board = setBoard();
+
     await setBombs();
 
     await setCount();
@@ -27,12 +27,12 @@ class GameClient {
     return board;
   }
 
-  Future<List> setBombs() async {
+  Future<Board> setBombs() async {
     var count = 0;
     while (count < totalMines) {
       int i = Random().nextInt(row);
       int j = Random().nextInt(row);
-      board[i][j] = '*';
+      board.grid[i][j] = '*';
       count++;
     }
     return board;
@@ -41,7 +41,7 @@ class GameClient {
   setCount() async {
     for (int r = 0; r < row; r++) {
       for (int c = 0; c < col; c++) {
-        if (board[r][c] == '*') {
+        if (board.grid[r][c] == '*') {
           addCountAdjacent(r, c);
         }
       }
@@ -51,7 +51,7 @@ class GameClient {
   addCountAdjacent(int r, int c) {
     for (int i = max(0, r - 1); i <= min(row - 1, r + 1); i++) {
       for (int j = max(0, c - 1); j <= min(col - 1, c + 1); j++) {
-        if (board[i][j] != '*') {
+        if (board.grid[i][j] != '*') {
           addCount(i, j);
         }
       }
@@ -59,9 +59,9 @@ class GameClient {
   }
 
   addCount(int r, int c) {
-    if (board[r][c] == null)
-      board[r][c] = 1;
+    if (board.grid[r][c] == null)
+      board.grid[r][c] = 1;
     else
-      board[r][c]++;
+      board.grid[r][c]++;
   }
 }
