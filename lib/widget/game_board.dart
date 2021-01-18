@@ -130,15 +130,6 @@ class _GameBoardState extends State<GameBoard> {
         });
   }
 
-  int _getFlippedCount() {
-    int count = 0;
-    for (int i = 0; i < row; i++) {
-      count +=
-          (slotState[i] as List).where((s) => s == SlotState.FLIPPED).length;
-    }
-    return count;
-  }
-
   _onTap(int row, int col) {
     setState(() {
       if (widget.board.grid[row][col] == '*') {
@@ -164,10 +155,6 @@ class _GameBoardState extends State<GameBoard> {
   }
 
   _flipNearby(int row, int col) {
-    int randomTop = row == 0 ? 0 : Random().nextInt(row);
-    int randomBottom = Random().nextInt(widget.row);
-    int randomLeft = col == 0 ? 0 : Random().nextInt(col);
-    int randomRight = Random().nextInt(widget.row);
 
     for (int i = row; i > row && i > 0; i--) {
       if (_isBomb(i, col)) break;
