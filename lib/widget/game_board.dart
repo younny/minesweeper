@@ -41,6 +41,7 @@ class _GameBoardState extends State<GameBoard> {
     if (oldWidget.board != widget.board) {
       setState(() {
         board = widget.board;
+        totalMines = widget.totalMines;
         slotState = List.generate(widget.row, (index) => List(widget.row));
       });
     }
