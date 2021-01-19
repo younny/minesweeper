@@ -1,4 +1,3 @@
-import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:minesweeper/bloc/enum.dart';
@@ -159,44 +158,33 @@ class _GameBoardState extends State<GameBoard> {
     for (int i = row; i > row && i > 0; i--) {
       if (_isBomb(i, col)) break;
       if (_isMoreThanOne(i, col)) break;
-      if (col > 0) _flipColumnRandomly(i, col);
+      if (col > 0) _flipColumnNearby(i, col);
       _flip(i, col);
     }
 
     for (int i = row + 1; i < widget.row; i++) {
       if (_isBomb(i, col)) break;
       if (_isMoreThanOne(i, col)) break;
-      if (col > 0) _flipColumnRandomly(i, col);
+      if (col > 0) _flipColumnNearby(i, col);
       _flip(i, col);
     }
 
     for (int i = col; i > col && i > 0; i--) {
       if (_isBomb(row, i)) break;
       if (_isMoreThanOne(row, i)) break;
-      if (col > 0) _flipColumnRandomly(i, col);
+      if (col > 0) _flipColumnNearby(i, col);
       _flip(row, i);
     }
 
     for (int i = col + 1; i < widget.row; i++) {
       if (_isBomb(row, i)) break;
       if (_isMoreThanOne(row, i)) break;
-      if (col > 0) _flipColumnRandomly(i, col);
+      if (col > 0) _flipColumnNearby(i, col);
       _flip(row, i);
     }
   }
 
-  _isBomb(int row, int col) => widget.board.grid[row][col] == '*';
-
-  _isMoreThanOne(int row, int col) =>
-      widget.board.grid[row][col] != null && widget.board.grid[row][col] > 1;
-
-  _flip(int row, int col) {
-    setState(() {
-      slotState[row][col] = SlotState.FLIPPED;
-    });
-  }
-
-  _flipColumnRandomly(int row, int col) {
+  _flipColumnNearby(int row, int col) {
     for (int j = col; j > col; j--) {
       if (_isBomb(row, j)) break;
       if (_isMoreThanOne(row, j)) break;
@@ -208,4 +196,16 @@ class _GameBoardState extends State<GameBoard> {
       _flip(row, j);
     }
   }
+
+  _flip(int row, int col) {
+    setState(() {
+      slotState[row][col] = SlotState.FLIPPED;
+    });
+  }
+
+  _isBomb(int row, int col) => widget.board.grid[row][col] == '*';
+
+  _isMoreThanOne(int row, int col) =>
+      widget.board.grid[row][col] != null && widget.board.grid[row][col] > 1;
+
 }
