@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:minesweeper/bloc/enum.dart';
 import 'package:minesweeper/model/board.dart';
@@ -103,9 +102,7 @@ class _GameBoardState extends State<GameBoard> {
           return AlertDialog(
             title: Text('Lose'),
             content: Container(
-              child: Text(
-                  'Bomb found'
-              ),
+              child: Text('Bomb found'),
             ),
             actions: <Widget>[
               TextButton(
@@ -136,7 +133,9 @@ class _GameBoardState extends State<GameBoard> {
         _showDialog();
       } else if (slotState[row][col] != SlotState.FLAGGED) {
         slotState[row][col] = SlotState.FLIPPED;
-        _flipNearby(row, col);
+        if (widget.board.grid[row][col] == null) {
+          _flipNearby(row, col);
+        }
       }
     });
   }
@@ -154,8 +153,7 @@ class _GameBoardState extends State<GameBoard> {
   }
 
   _flipNearby(int row, int col) {
-
-    for (int i = row; i > row && i > 0; i--) {
+    for (int i = row - 1; i >= 0; i--) {
       if (_isBomb(i, col)) break;
       if (_isMoreThanOne(i, col)) break;
       if (col > 0) _flipColumnNearby(i, col);
@@ -169,7 +167,7 @@ class _GameBoardState extends State<GameBoard> {
       _flip(i, col);
     }
 
-    for (int i = col; i > col && i > 0; i--) {
+    for (int i = col - 1; i >= 0; i--) {
       if (_isBomb(row, i)) break;
       if (_isMoreThanOne(row, i)) break;
       if (col > 0) _flipColumnNearby(i, col);
@@ -185,12 +183,12 @@ class _GameBoardState extends State<GameBoard> {
   }
 
   _flipColumnNearby(int row, int col) {
-    for (int j = col; j > col; j--) {
+    for (int j = col - 1; j >= 0; j--) {
       if (_isBomb(row, j)) break;
       if (_isMoreThanOne(row, j)) break;
       _flip(row, j);
     }
-    for (int j = col; j < widget.row; j++) {
+    for (int j = col + 1; j < widget.row; j++) {
       if (_isBomb(row, j)) break;
       if (_isMoreThanOne(row, j)) break;
       _flip(row, j);
@@ -207,5 +205,4 @@ class _GameBoardState extends State<GameBoard> {
 
   _isMoreThanOne(int row, int col) =>
       widget.board.grid[row][col] != null && widget.board.grid[row][col] > 1;
-
 }
