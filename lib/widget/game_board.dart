@@ -134,7 +134,7 @@ class _GameBoardState extends State<GameBoard> {
       } else if (slotState[row][col] != SlotState.FLAGGED) {
         slotState[row][col] = SlotState.FLIPPED;
         if (widget.board.grid[row][col] == null) {
-          _flipNearby(row, col);
+          _flipAdjacent(row, col);
         }
       }
     });
@@ -152,37 +152,37 @@ class _GameBoardState extends State<GameBoard> {
     });
   }
 
-  _flipNearby(int row, int col) {
+  _flipAdjacent(int row, int col) {
     for (int i = row - 1; i >= 0; i--) {
       if (_isBomb(i, col)) break;
       if (_isMoreThanOne(i, col)) break;
-      if (col > 0) _flipColumnNearby(i, col);
+      if (col > 0) _flipAdjacentPerColumn(i, col);
       _flip(i, col);
     }
 
     for (int i = row + 1; i < widget.row; i++) {
       if (_isBomb(i, col)) break;
       if (_isMoreThanOne(i, col)) break;
-      if (col > 0) _flipColumnNearby(i, col);
+      if (col > 0) _flipAdjacentPerColumn(i, col);
       _flip(i, col);
     }
 
     for (int i = col - 1; i >= 0; i--) {
       if (_isBomb(row, i)) break;
       if (_isMoreThanOne(row, i)) break;
-      if (col > 0) _flipColumnNearby(i, col);
+      if (col > 0) _flipAdjacentPerColumn(i, col);
       _flip(row, i);
     }
 
     for (int i = col + 1; i < widget.row; i++) {
       if (_isBomb(row, i)) break;
       if (_isMoreThanOne(row, i)) break;
-      if (col > 0) _flipColumnNearby(i, col);
+      if (col > 0) _flipAdjacentPerColumn(i, col);
       _flip(row, i);
     }
   }
 
-  _flipColumnNearby(int row, int col) {
+  _flipAdjacentPerColumn(int row, int col) {
     for (int j = col - 1; j >= 0; j--) {
       if (_isBomb(row, j)) break;
       if (_isMoreThanOne(row, j)) break;
