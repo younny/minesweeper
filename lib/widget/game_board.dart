@@ -155,29 +155,25 @@ class _GameBoardState extends State<GameBoard> {
 
   _flipAdjacent(int row, int col) {
     for (int i = row - 1; i >= 0; i--) {
-      if (_isBomb(i, col)) break;
-      if (_isMoreThanOne(i, col)) break;
+      if (_isExclusiveCase(i, col)) break;
       if (col > 0) _flipAdjacentPerColumn(i, col);
       _flip(i, col);
     }
 
     for (int i = row + 1; i < widget.row; i++) {
-      if (_isBomb(i, col)) break;
-      if (_isMoreThanOne(i, col)) break;
+      if (_isExclusiveCase(i, col)) break;
       if (col > 0) _flipAdjacentPerColumn(i, col);
       _flip(i, col);
     }
 
     for (int i = col - 1; i >= 0; i--) {
-      if (_isBomb(row, i)) break;
-      if (_isMoreThanOne(row, i)) break;
+      if (_isExclusiveCase(row, i)) break;
       if (col > 0) _flipAdjacentPerColumn(i, col);
       _flip(row, i);
     }
 
     for (int i = col + 1; i < widget.row; i++) {
-      if (_isBomb(row, i)) break;
-      if (_isMoreThanOne(row, i)) break;
+      if (_isExclusiveCase(row, i)) break;
       if (col > 0) _flipAdjacentPerColumn(i, col);
       _flip(row, i);
     }
@@ -185,13 +181,11 @@ class _GameBoardState extends State<GameBoard> {
 
   _flipAdjacentPerColumn(int row, int col) {
     for (int j = col - 1; j >= 0; j--) {
-      if (_isBomb(row, j)) break;
-      if (_isMoreThanOne(row, j)) break;
+      if (_isExclusiveCase(row, j)) break;
       _flip(row, j);
     }
     for (int j = col + 1; j < widget.row; j++) {
-      if (_isBomb(row, j)) break;
-      if (_isMoreThanOne(row, j)) break;
+      if (_isExclusiveCase(row, j)) break;
       _flip(row, j);
     }
   }
@@ -202,8 +196,16 @@ class _GameBoardState extends State<GameBoard> {
     });
   }
 
+  _isExclusiveCase(int row, int col) =>
+      _isBomb(row, col) ||
+      _isMoreThanOne(row, col) ||
+      _isAlreadyFlipped(row, col);
+
   _isBomb(int row, int col) => widget.board.grid[row][col] == '*';
 
   _isMoreThanOne(int row, int col) =>
       widget.board.grid[row][col] != null && widget.board.grid[row][col] > 1;
+
+  _isAlreadyFlipped(int row, int col) =>
+      slotState[row][col] == SlotState.FLIPPED;
 }
