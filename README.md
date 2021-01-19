@@ -17,3 +17,5 @@ Basic rule is same as usual mineswepper game. But the default size of board and 
 * Put the flag with long press, once you think the slot might have mine. 
 * If you flip mine, the app shows dialog that you lose. You are able to simply restart from there or close it and see the results.
 * There is a 'restart' icon at the top, it resets the board and you can start again.
+
+<img src="./minesweeper1.jpg" width="300">&nbsp;&nbsp;&nbsp;<img src="./minesweeper2.jpg" width="300">
