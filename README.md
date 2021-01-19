@@ -1,17 +1,19 @@
 # minesweeper
 
-Minesweeper Game
+Simple minesweeper Game implemented in Flutter.
 
-## Getting Started
+## Run the app
 
-This project is a starting point for a Flutter application.
+```
+flutter pub get
+flutter run
+```
 
-A few resources to get you started if this is your first Flutter project:
+## How to play
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
-
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
-# Minesweeper
+Basic rule is same as usual mineswepper game. But the default size of board and the number of mines are not customizable.
+* Board is 10 X 10 with 10 mines total. 
+* You can start game by clicking any slots in the board. 
+* Put the flag with long press, once you think the slot might have mine. 
+* If you flip mine, the app shows dialog that you lose. You are able to simply restart from there or close it and see the results.
+* There is a 'restart' icon at the top, it resets the board and you can start again.
