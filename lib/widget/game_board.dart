@@ -24,7 +24,6 @@ class GameBoard extends StatefulWidget {
 }
 
 class _GameBoardState extends State<GameBoard> {
-  int row;
   List slotState;
   int totalMines;
   Board board;
@@ -32,10 +31,9 @@ class _GameBoardState extends State<GameBoard> {
   @override
   void initState() {
     super.initState();
-    row = widget.row;
     totalMines = widget.totalMines;
     board = widget.board;
-    slotState = List.generate(row, (index) => List(row));
+    slotState = List.generate(widget.row, (index) => List(widget.row));
   }
 
   @override
@@ -44,13 +42,14 @@ class _GameBoardState extends State<GameBoard> {
     if (oldWidget.board != widget.board) {
       setState(() {
         board = widget.board;
-        slotState = List.generate(row, (index) => List(row));
+        slotState = List.generate(widget.row, (index) => List(widget.row));
       });
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    final row = widget.row;
     return Column(
       children: [
         SettingBar(
@@ -86,6 +85,7 @@ class _GameBoardState extends State<GameBoard> {
   }
 
   _onReveal() {
+    final row = widget.row;
     setState(() {
       for (int i = 0; i < row; i++) {
         for (int j = 0; j < row; j++) {
